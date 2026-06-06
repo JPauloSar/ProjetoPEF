@@ -18,19 +18,19 @@ os.makedirs(nome_pasta, exist_ok=True)
 
 
 # parametros fixos iniciais apenas para codar (pandas depois para fazer iterações):
-R_base =  2.25
-R_nacelle = 1.0
-H = 119.0
+R_base =  2.25      #metros
+R_nacelle = 1.0     #metros
+H = 119.0           #metros
 
-e = 0.2
-d = 25.0
-g = 9.81
+e = 0.2             #metros
+d = 2500.0          #kg/m3
+g = 9.81            #m/s2
 
-pressaoVento = 1.5
-pesoNacelle = 2907.0
-forcaNacelle = 1044.0
-momentoNacelle = 12817.0
-
+pressaoVento = 1.5          #KPa
+pesoNacelle = 2907.0        #KN
+forcaNacelle = 1044.0       #KN
+momentoNacelle = 12817.0    #KNm
+  
 #contas:
 def calcular_raio(z):
     """calcula o raio para determinada altura"""
@@ -45,12 +45,12 @@ def calcular_area(z):
 def peso_distribuido(z, dz):
     """calcula o peso de cada fatia na altura z"""
     area = calcular_area(z)
-    return g*area*d*dz
+    return g*area*d*dz /1000.0
 
 def vento_distribuido(z, dz):
     """calcula a força do vento sobre uma fatia da torre na altura z"""
     Diametro = 2*calcular_raio(z)
-    return Diametro*dz*pressaoVento 
+    return (Diametro*dz*pressaoVento)
 
 #esforços
 def calcular_Esforcos(z,dz):
@@ -63,13 +63,13 @@ def calcular_Esforcos(z,dz):
     vento_inv = vento_fatias[::-1]
 
     #calculo da normal:
-    normal_inv = pesoNacelle + np.cumsum(peso_inv)
+    normal_inv = pesoNacelle + np.cumsum(peso_inv) - peso_inv
 
     #calculo da forca cortante:
-    forcaCortante_inv = forcaNacelle + np.cumsum(vento_inv)
+    forcaCortante_inv = forcaNacelle + np.cumsum(vento_inv) - vento_inv 
 
     #calculo do momento fletor:
-    momentoFletor_inv = momentoNacelle + np.cumsum(forcaCortante_inv*dz) - (forcaCortante_inv * dz)
+    momentoFletor_inv = momentoNacelle + np.cumsum(forcaCortante_inv * dz) - (forcaCortante_inv * dz)
 
     normal = normal_inv[::-1]
     forcaCortante = forcaCortante_inv[::-1]
@@ -81,7 +81,7 @@ def calcular_Esforcos(z,dz):
 print("Começando simulações...\n")
 
 dz = 1.0
-z = np.arange(0, H + dz, dz)
+z = np.arange(dz / 2, H, dz)
 
 normal, forcaCortante, momentoFletor = calcular_Esforcos(z, dz)
 
