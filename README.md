@@ -8,7 +8,7 @@ Este projeto realiza a simulação numérica dos esforços internos (Força Norm
 Como o projeto utiliza um ambiente virtual do Python (`ambienteTorre`) dentro do ambiente WSL (Ubuntu/Linux no Windows), siga os passos abaixo no seu terminal para executar a simulação.
 
 ### 1. Ativar o Ambiente Virtual
-Navegue até a pasta do projeto e ative o ambiente virtual para carregar as dependências corretas (NumPy, Pandas, Matplotlib):
+Navegue até a pasta do projeto e ative o ambiente virtual para carregar as dependências corretas (NumPy, Matplotlib):
 ```bash
 cd ~/ProjetoPEF
 source ambienteTorre/bin/activate
