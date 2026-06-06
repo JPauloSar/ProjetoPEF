@@ -8,12 +8,12 @@ Este projeto realiza a simulação numérica dos esforços internos (Força Norm
 Para garantir que o simulador funcione perfeitamente em qualquer máquina, as dependências do projeto são gerenciadas através de um arquivo `requirements.txt`. Siga os passos abaixo no seu terminal para configurar o ambiente e executar a simulação:
 
 ### 1. Criar e Ativar o Ambiente Virtual
-## 🚀 Como Rodar o Projeto
 Navegue até a pasta do projeto e crie um ambiente virtual limpo (para isolar as bibliotecas deste projeto do resto do seu computador):
 ```bash
 cd ~/ProjetoPEF
 python -m venv ambienteTorre
 source ambienteTorre/bin/activate
+pip install -r requirements.txt
 
 ```
 
