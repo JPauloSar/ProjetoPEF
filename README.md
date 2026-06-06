@@ -75,6 +75,3 @@ Ao finalizar a execução, o código organiza os resultados automaticamente para
 2. **Gráficos Individuais:** Salva imagens `.png` com os três gráficos (N, V, M) para **cada** cenário simulado.
 3. **Gráfico Comparativo Geral:** Um arquivo consolidado (`00_Comparativo_Geral_de_Cenarios.png`) é gerado sobrepondo todos os cenários nos mesmos eixos, facilitando a análise crítica das situações mais exigentes para o dimensionamento.
 
-```
-
-```
