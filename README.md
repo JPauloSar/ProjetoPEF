@@ -1,4 +1,4 @@
-```markdown
+
 # Simulador de Esforços Estruturais - Torre Eólica (Projeto PEF-3208 2026)
 
 Este projeto realiza a simulação numérica dos esforços internos (Força Normal, Esforço Cortante e Momento Fletor) ao longo da altura de uma torre eólica de concreto armado (tronco-cônica) utilizando Python, NumPy e Matplotlib.
@@ -22,7 +22,6 @@ Com o ambiente ativado, basta rodar o arquivo principal em Python:
 ```bash
 python Simulation.py
 
-```
 
 ---
 
