@@ -9,25 +9,46 @@ import math
 #      e possui espessura (e) constante;
 #   3) O peso de um corte infinitesimal dz é dado pela densidade (d) do concreto pela área da coroa circular
 #      criada pela geometria; A = pi*(R^2-[R-e]^2). 
-#   4) O vento possui uma carga distribuida na torre cuja força é proporcional ao diâmetro da torre naquele ponto.
+#   4) O vento possui uma carga distribuida na torre cuja força é proporcional ao diâmetro, seguindo o 
+#      perfil de Hellmann (IEC 61400-1) para pressão do vento na torre naquele ponto. Ou seja: P_z= P_H*(z/H)**(2*alfa).
 #      também há uma força concentrada do vento na nacelle.
 
 
 # parametros fixos iniciais apenas para codar (pandas depois para fazer iterações):
-R_base =  2.25             #metros
-R_nacelle = 1.0            #metros
-H = 119.0                  #metros
-pesoNacelle = 2907.0       #KN
-d = 2500.0                 #kg/m3
-e = 0.2                    #metros
 
+# torre referência
+#R_base =  2.25             #metros
+#R_nacelle = 1.0            #metros
+#H = 119.0                  #metros
+#pesoNacelle = 2907.0       #KN
+#d = 2500.0                 #kg/m3
+#e = 0.2                    #metros
+#alfa = 0.2                 #coeficiente de rugosidade do terreno
+
+# Variação 1: Torre de Alta Potência (Nova Geração)
+#R_base = 3.50              # metros (Base bem mais larga)
+#R_nacelle = 1.50           # metros
+#H = 150.0                  # metros (Torre super alta)
+#pesoNacelle = 4500.0       # KN (Nacelle muito mais pesada)
+#d = 2500.0                 # kg/m3 (Concreto armado mantido)
+#e = 0.35                   # metros (Paredes de 35 cm para aguentar o peso)
+#alfa = 0.2                 # coeficiente de rugosidade do terreno
+
+# Variação 2: Torre de Geração Antiga (Onshore Leve)
+R_base = 1.80              # metros (Base mais estreita)
+R_nacelle = 0.80           # metros
+H = 80.0                   # metros (Torre mais baixa)
+pesoNacelle = 1800.0       # KN (Nacelle mais leve)
+d = 2500.0                 # kg/m3 (Concreto armado mantido)
+e = 0.15                   # metros (Paredes de 15 cm)
+alfa = 0.2                 # coeficiente de rugosidade do terreno
 
 nome_pasta = f"Torre_H{H}m_Rb{R_base*100}cm_Rn{R_nacelle}m_e{e*100}cm"
 os.makedirs(nome_pasta, exist_ok=True)
 
 g = 9.81            #m/s2
 
-#pressaoVento = 1.5          #KPa
+#pressaoVento = 1.5          #KPa no topo 
 #forcaNacelle = 1044.0       #KN
 #momentoNacelle = 12817.0    #KNm
 
@@ -80,7 +101,7 @@ def peso_distribuido(z, dz):
 def vento_distribuido(z, dz, pressaoVento):
     """calcula a força do vento sobre uma fatia da torre na altura z"""
     Diametro = 2*calcular_raio(z)
-    return (Diametro*dz*pressaoVento)
+    return (Diametro * dz * pressaoVento * ( ( z / H ) ** (2*alfa) ))
 
 #esforços
 def calcular_Esforcos(z,dz, pressaoVento, forcaNacelle, momentoNacelle):
@@ -181,6 +202,9 @@ axs_global[2].set_title("Momento Fletor (M)", fontsize=12, fontweight='bold')
 axs_global[2].set_xlabel("Momento (kNm)", fontsize=10)
 axs_global[2].grid(True, linestyle='--', alpha=0.5)
 
+# --- CORREÇÃO DE SOBREPOSIÇÃO ---
+# Força notação científica no eixo X
+axs_global[2].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 fig_global.tight_layout()
 
 caminho_global = os.path.join(nome_pasta, "00_Comparativo_Geral_de_Cenarios.png")

@@ -29,14 +29,14 @@ python Simulation.py
 
 ## ⚙️ Funcionalidades do Código
 
-O script realiza a discretização da torre eólica em "fatias" infinitesimais (com passo `dz = 1.0 m`) e integra os esforços de cima para baixo (da nacelle até a base), aplicando os princípios da estática para determinar as reações ao longo de toda a estrutura.
+O script atua como um simulador paramétrico, realizando a discretização da torre eólica em "fatias" de elementos finitos (com passo `dz = 1.0 m`). Ele integra os esforços numericamente de cima para baixo (da nacelle até o engaste na base), aplicando o Método da Soma de Riemann para determinar as reações ao longo de toda a estrutura.
 
-As principais etapas do código incluem:
+As principais etapas e diferenciais do código incluem:
 
-* **Cálculo Geométrico Dinâmico:** Determina o raio externo, raio interno e a área da seção transversal vazada para qualquer altura `z`.
-* **Distribuição de Cargas:** Calcula o peso próprio da estrutura (concreto) e a força distribuída do vento, que varia proporcionalmente ao diâmetro da torre em cada cota.
-* **Integração de Esforços:** Acumula as cargas verticais e horizontais, além de calcular os momentos fletores gerados pelas forças cortantes e pelas cargas concentradas no topo.
-* **Geração Automática de Gráficos:** Plota os perfis de N, V e M e os salva automaticamente.
+* **Cálculo Geométrico Dinâmico:** Determina o raio externo, raio interno e a área da seção transversal vazada para qualquer altura `z` da torre de forma contínua e vetorizada.
+* **Carregamento Aerodinâmico Não-Linear:** Além de calcular o peso próprio da estrutura, o script aplica o perfil de *Wind Shear* (Camada Limite Atmosférica). A pressão do vento é calculada exponencialmente para cada cota `z` e multiplicada pelo diâmetro local, simulando com precisão o escoamento real exigido em normas.
+* **Integração Numérica de Esforços:** Utiliza funções otimizadas do NumPy (`np.cumsum`) para acumular as cargas verticais (Força Normal) e horizontais (Esforço Cortante), construindo iterativamente os braços de alavanca para o Momento Fletor gerado pelas cortantes e pelas cargas concentradas no topo.
+* **Automação de Cenários e Exportação:** O script itera automaticamente sobre um dicionário contendo múltiplos cenários de carga (como vento de serviço, fadiga e frenagem de emergência). Ele cria pastas dinâmicas baseadas nas dimensões da torre, salva os gráficos individuais e gera um diagrama comparativo global formatado em notação científica para análise direta.
 
 ---
 
@@ -47,8 +47,7 @@ Para fins didáticos e de simulação, o modelo matemático assume as seguintes 
 1. **Engaste Perfeito:** A base da torre é considerada perfeitamente engastada no solo.
 2. **Geometria de Tronco de Cone:** O raio da torre diminui de forma linear desde a base ($R_{base}$) até o topo ($R_{nacelle}$), mantendo uma espessura de parede constante ($e$).
 3. **Peso Próprio Discretizado:** O peso de cada fatia infinitesimal é calculado multiplicando a densidade do concreto pelo volume da coroa circular daquela seção.
-4. **Cargas de Vento:** A carga de vento distribuída na torre resulta em uma força proporcional ao diâmetro exposto na respectiva altura. Na nacelle, atua uma força concentrada de vento e um momento fletor inicial.
-
+4. **Cargas de Vento Não-Lineares (Wind Shear):** A pressão dinâmica do vento distribuída ao longo da torre obedece ao perfil da camada limite atmosférica (Perfil de Hellmann / Lei da Potência), conforme a norma internacional **IEC 61400-1**. A pressão varia exponencialmente com a altura através da relação $P_z = P_H \cdot (z/H)^{2\alpha}$. A força distribuída em cada cota é o produto dessa pressão variável pelo diâmetro local exposto. Adicionalmente, atuam no topo uma força cortante concentrada e um momento fletor inicial provenientes do empuxo e da inércia do rotor/nacelle.
 ---
 
 ## 🌪️ Cenários de Carga Simulados
