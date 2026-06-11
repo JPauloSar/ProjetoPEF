@@ -1,0 +1,10 @@
+{
+    "cenarios": {
+        "Vento_Extremo_ALSTOM": {"pressao": 1.50, "forca": 1044.0, "momento": 12817.0},
+        "Vento_Servico_DLC_1_1": {"pressao": 0.82, "forca": 574.0, "momento": 7049.0},
+        "Frenagem_Emergencia_DLC21": {"pressao": 1.40, "forca": 1400.0, "momento": 18500.0},
+        "Tempestade_50Anos_Parada": {"pressao": 2.80, "forca": 450.0, "momento": 6200.0},
+        "Rajada_Mudanca_Direcao_DLC14": {"pressao": 1.80, "forca": 1250.0, "momento": 10500.0}  
+    }
+}
+

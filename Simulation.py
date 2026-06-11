@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -14,78 +15,38 @@ import math
 #      perfil de Hellmann (IEC 61400-1) para pressão do vento na torre naquele ponto. Ou seja: P_z= P_H*(z/H)**(2*alfa).
 #      também há uma força concentrada do vento na nacelle.
 
+#Leitura do .json da torre 
 
-# parametros fixos iniciais apenas para codar (pandas depois para fazer iterações):
+with open( "parametros_torre.json" , "r" ) as torre :
+    dados_torre = json.load(torre)
 
-# Torre Referência
-R_base =  3.0              #metros
-R_nacelle = 2.0            #metros
-H = 90.0                   #metros
-pesoNacelle = 467.0        #KN
-d = 2500.0                 #kg/m3
-e = 0.3                    #metros
-alfa = 0.2                 #coeficiente de rugosidade do terreno
-Cd = 0.7                   #coeficiente de arrasto
+params = dados_torre["parametros_torre"]
 
-# Variação 1: Torre de Alta Potência (Nova Geração)
-#R_base = 3.50              # metros (Base bem mais larga)
-#R_nacelle = 1.50           # metros
-#H = 150.0                  # metros (Torre super alta)
-#pesoNacelle = 4500.0       # KN (Nacelle muito mais pesada)
-#d = 2500.0                 # kg/m3 (Concreto armado mantido)
-#e = 0.35                   # metros (Paredes de 35 cm para aguentar o peso)
-#alfa = 0.2                 # coeficiente de rugosidade do terreno
-#Cd = 0.7                   #coeficiente de arrasto
+R_base = params["R_base"]
+R_nacelle = params["R_nacelle"]
+H = params["H"]
+pesoNacelle = params["pesoNacelle"]
+d = params["d"]
+e = params["e"]
+alfa = params["alfa"]
+Cd = params["Cd"]
 
-# Variação 2: Torre de Geração Antiga (Onshore Leve)
-#R_base = 1.80              # metros (Base mais estreita)
-#R_nacelle = 0.80           # metros
-#H = 80.0                   # metros (Torre mais baixa)
-#pesoNacelle = 1800.0       # KN (Nacelle mais leve)
-#d = 2500.0                 # kg/m3 (Concreto armado mantido)
-#e = 0.15                   # metros (Paredes de 15 cm)
-#alfa = 0.2                 # coeficiente de rugosidade do terreno
-#Cd = 0.7                   #coeficiente de arrasto
+#leitura do .json cenarios_vento
 
+with open( "cenarios_vento.json" , "r" ) as arquivo_cenarios :
+    dados_cenarios = json.load(arquivo_cenarios)
+
+cenarios = dados_cenarios["cenarios"]
+
+#criação da pasta 
 
 nome_pasta = f"Torre_H{H}m_Rb{R_base*100}cm_Rn{R_nacelle}m_e{e*100}cm"
 os.makedirs(nome_pasta, exist_ok=True)
 
+#Dados hardcode
+
 g = 9.81            #m/s2
 
-#pressaoVento = 1.5          #KPa no topo 
-#forcaNacelle = 1044.0       #KN
-#momentoNacelle = 12817.0    #KNm
-
-cenarios = {
-    # =========================================================================================
-    # 1. CENÁRIOS DOCUMENTADOS (Baseados no doc ALSTOM / EGT Engenharia cedidos pelo professor)
-    # =========================================================================================
-    
-    # Cargas Extremas - Com coeficientes de majoração (γF = 1.35)
-    "Vento_Extremo_ALSTOM": {"pressao": 1.50, "forca": 1044.0, "momento": 12817.0},
-    
-    # Caso DLC 1.1 (Serviço) - Cargas quase-permanentes sem majoração (γF = 1.00)
-    "Vento_Servico_DLC_1_1": {"pressao": 0.82, "forca": 574.0, "momento": 7049.0},
-    
-    # Cargas de Fadiga Equivalente - (Curva S-N m=4)
-    "Vento_Fadiga_m4": {"pressao": 0.54, "forca": 378.0, "momento": 4644.0},
-
-    # ==============================================================================
-    # 2. CENÁRIOS EXTREMOS HIPOTÉTICOS (CRIADOS POR INTELIGÊNCIA ARTIFICIAL - GEMINI)
-    # Valores plausíveis inspirados nos Design Load Cases (DLC) da norma IEC 61400-1 
-    # gerados exclusivamente para fins didáticos e testes de simulação.
-    # ==============================================================================
-    
-    # Turbina parada na tempestade (Pás em bandeira protegem a nacelle, mas a torre sofre)
-    "Tempestade_50Anos_Parada": {"pressao": 2.80, "forca": 450.0, "momento": 6200.0},
-    
-    # Travamento brusco do rotor em operação (Inércia cria momento fletor colossal no topo)
-    "Frenagem_Emergencia_DLC21": {"pressao": 1.40, "forca": 1400.0, "momento": 18500.0},
-    
-    # Rajada lateral (Vento obliquo força a estrutura de lado antes da turbina girar)
-    "Rajada_Mudanca_Direcao_DLC14": {"pressao": 1.80, "forca": 1250.0, "momento": 10500.0}
-}
 
 #contas:
 def calcular_raio(z):
