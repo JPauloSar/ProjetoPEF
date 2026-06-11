@@ -1,10 +1,39 @@
 {
     "cenarios": {
-        "Vento_Extremo_ALSTOM": {"pressao": 1.50, "forca": 1044.0, "momento": 12817.0},
-        "Vento_Servico_DLC_1_1": {"pressao": 0.82, "forca": 574.0, "momento": 7049.0},
-        "Frenagem_Emergencia_DLC21": {"pressao": 1.40, "forca": 1400.0, "momento": 18500.0},
-        "Tempestade_50Anos_Parada": {"pressao": 2.80, "forca": 450.0, "momento": 6200.0},
-        "Rajada_Mudanca_Direcao_DLC14": {"pressao": 1.80, "forca": 1250.0, "momento": 10500.0}  
+        "Estudo_Torre_Eolica_ALSTOM_Secao_6_1_Extreme_Loads": {
+            "pressao": 0.0,
+            "forca": 1044.0,
+            "momento": 12817.0
+        },
+        "Estudo_Torre_Eolica_ALSTOM_Secao_6_1_DLC_1_1": {
+            "pressao": 0.0,
+            "forca": 0.0,
+            "momento": 7049.0
+        },
+        "Estudo_Torre_Eolica_ALSTOM_Secao_6_1_Equivalent_Fatigue_m4": {
+            "pressao": 0.0,
+            "forca": 0.0,
+            "momento": 4644.0
+        },
+        "TCC_Igor_Pagina_88_e_89_Massas_Excentricidade": {
+            "pressao": 0.0,
+            "forca": 705.3,
+            "momento": 2052.3
+        },
+        "Gemini_Caso_Extremo_Furacao_Cat_5_Rotor_Travado": {
+            "pressao": 3.80,
+            "forca": 1600.0,
+            "momento": 15500.0
+        },
+        "Gemini_Caso_Extremo_Frenagem_Emergencia_Durante_Rajada": {
+            "pressao": 1.50,
+            "forca": 1850.0,
+            "momento": 22000.0
+        },
+        "Gemini_Caso_Extremo_Erro_Guinada_Vento_Lateral": {
+            "pressao": 2.20,
+            "forca": 1300.0,
+            "momento": 18500.0
+        }
     }
 }
-

@@ -16,7 +16,6 @@ import math
 #      também há uma força concentrada do vento na nacelle.
 
 #Leitura do .json da torre 
-
 with open( "parametros_torre.json" , "r" ) as torre :
     dados_torre = json.load(torre)
 
@@ -32,23 +31,20 @@ alfa = params["alfa"]
 Cd = params["Cd"]
 
 #leitura do .json cenarios_vento
-
 with open( "cenarios_vento.json" , "r" ) as arquivo_cenarios :
     dados_cenarios = json.load(arquivo_cenarios)
 
 cenarios = dados_cenarios["cenarios"]
 
 #criação da pasta 
-
 nome_pasta = f"Torre_H{H}m_Rb{R_base*100}cm_Rn{R_nacelle}m_e{e*100}cm"
 os.makedirs(nome_pasta, exist_ok=True)
 
 #Dados hardcode
-
 g = 9.81            #m/s2
 
 
-#contas:
+#Funções:
 def calcular_raio(z):
     """calcula o raio para determinada altura"""
 
@@ -132,6 +128,8 @@ for cenario, dados in cenarios.items():
     axs_ind[2].set_title("Momento Fletor (M)")
     axs_ind[2].set_xlabel("Momento (kNm)")
     axs_ind[2].grid(True, linestyle='--', alpha=0.7)
+
+    axs_ind[2].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 
     fig_ind.tight_layout()
     
