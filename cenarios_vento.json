@@ -1,5 +1,10 @@
 {
     "cenarios": {
+        "Caso_Referência_Calculado_A_Mao": {
+            "pressao": 1.93,
+            "forca": 363.0,
+            "momento": 0.0
+        },
         "Estudo_Torre_Eolica_ALSTOM_Secao_6_1_Extreme_Loads": {
             "pressao": 0.0,
             "forca": 1044.0,
@@ -19,6 +24,16 @@
             "pressao": 0.0,
             "forca": 705.3,
             "momento": 2052.3
+        },
+        "Gemini_Caso_Normal_Operacao_Nominal": {
+            "pressao": 0.85,
+            "forca": 680.0,
+            "momento": 7500.0
+        },
+        "Gemini_Caso_Normal_Vento_Leve": {
+            "pressao": 0.25,
+            "forca": 210.0,
+            "momento": 3200.0
         },
         "Gemini_Caso_Extremo_Furacao_Cat_5_Rotor_Travado": {
             "pressao": 3.80,

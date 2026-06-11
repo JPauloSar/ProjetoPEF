@@ -45,7 +45,7 @@ As principais etapas e diferenciais do código incluem:
 Para fins didáticos e de simulação, o modelo matemático assume as seguintes premissas:
 
 1. **Engaste Perfeito:** A base da torre é considerada perfeitamente engastada no solo.
-2. **Geometria de Tronco de Cone:** O raio da torre diminui de forma linear desde a base ($R_{base}$) até o topo ($R_{nacelle}$), mantendo uma espessura de parede constante ($e$).
+2. **Geometria de Tronco de Cone:** O raio da torre diminui de forma linear desde a base ($R_{base}$) até sua metade ($R_{nacelle}$), a partir de então, a torre mantém raio ($R_{nacelle}$). A torre mantém uma espessura de parede constante ($e$) durante todo o seu comprimento.
 3. **Peso Próprio Discretizado:** O peso de cada fatia infinitesimal é calculado multiplicando a densidade do concreto pelo volume da coroa circular daquela seção.
 4. **Cargas de Vento Não-Lineares (Wind Shear):** A pressão dinâmica do vento distribuída ao longo da torre obedece ao perfil da camada limite atmosférica (Perfil de Hellmann / Lei da Potência), conforme a norma internacional **IEC 61400-1**. A pressão varia exponencialmente com a altura através da relação $P_z = P_H \cdot (z/H)^{2\alpha}$. A força distribuída em cada cota é o produto dessa pressão variável pelo diâmetro local exposto. Adicionalmente, atuam no topo uma força cortante concentrada e um momento fletor inicial provenientes do empuxo e da inércia do rotor/nacelle.
 ---

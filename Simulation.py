@@ -155,8 +155,6 @@ axs_global[0].set_xlabel("Força (kN)", fontsize=10)
 axs_global[0].set_ylabel("Altura da Torre (m)", fontsize=10)
 axs_global[0].grid(True, linestyle='--', alpha=0.5)
 
-axs_global[0].legend(loc="upper right", fontsize=8)
-
 #estilização do Esforço Cortante Global
 axs_global[1].set_title("Esforço Cortante (V)", fontsize=12, fontweight='bold')
 axs_global[1].set_xlabel("Força (kN)", fontsize=10)
@@ -170,7 +168,27 @@ axs_global[2].grid(True, linestyle='--', alpha=0.5)
 # --- CORREÇÃO DE SOBREPOSIÇÃO ---
 # Força notação científica no eixo X
 axs_global[2].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
-fig_global.tight_layout()
+
+# --- NOVA LEGENDA GLOBAL E AJUSTE DE LAYOUT ---
+
+# 1. Coleta as linhas e os nomes do primeiro gráfico
+linhas, nomes = axs_global[0].get_legend_handles_labels()
+
+# 2. Cria uma legenda centralizada no fundo da imagem (fora dos eixos) com 3 colunas
+fig_global.legend(linhas, nomes, loc='lower center', bbox_to_anchor=(0.5, 0.0), ncol=3, fontsize=9)
+
+# 3. Força notação científica no eixo X (já estava no seu código)
+axs_global[2].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+
+# 4. Ajusta o layout deixando 15% de espaço vazio na parte inferior (rect=[left, bottom, right, top])
+# para que os gráficos não esmaguem a legenda
+fig_global.tight_layout(rect=[0, 0.15, 1, 1])
+
+# --- FIM DA NOVA LEGENDA ---
+
+caminho_global = os.path.join(nome_pasta, "00_Comparativo_Geral_de_Cenarios.png")
+fig_global.savefig(caminho_global, dpi=300)
+plt.close(fig_global)
 
 caminho_global = os.path.join(nome_pasta, "00_Comparativo_Geral_de_Cenarios.png")
 fig_global.savefig(caminho_global, dpi=300)
