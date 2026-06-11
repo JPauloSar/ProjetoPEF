@@ -6,9 +6,10 @@ import math
 #Hipóteses Siplificadoras para os fins da simulação:
 #   1) A torre consiste em um engaste fixo no solo com altura H;
 #   2) A torre é um tronco de cone cujo raio diminui linearmente com a altura (de R_base até R_nacelle) 
-#      e possui espessura (e) constante;
+#      até sua metade, onde ela passa a ser um cilindro. A estrutura possui espessura (e) constante ao longo de
+#      toda a sua extensão;
 #   3) O peso de um corte infinitesimal dz é dado pela densidade (d) do concreto pela área da coroa circular
-#      criada pela geometria; A = pi*(R^2-[R-e]^2). 
+#      criada pela geometria; A = pi*(R^2-[R-e]^2); 
 #   4) O vento possui uma carga distribuida na torre cuja força é proporcional ao diâmetro, seguindo o 
 #      perfil de Hellmann (IEC 61400-1) para pressão do vento na torre naquele ponto. Ou seja: P_z= P_H*(z/H)**(2*alfa).
 #      também há uma força concentrada do vento na nacelle.
@@ -16,14 +17,15 @@ import math
 
 # parametros fixos iniciais apenas para codar (pandas depois para fazer iterações):
 
-# torre referência
-#R_base =  2.25             #metros
-#R_nacelle = 1.0            #metros
-#H = 119.0                  #metros
-#pesoNacelle = 2907.0       #KN
-#d = 2500.0                 #kg/m3
-#e = 0.2                    #metros
-#alfa = 0.2                 #coeficiente de rugosidade do terreno
+# Torre Referência
+R_base =  3.0              #metros
+R_nacelle = 2.0            #metros
+H = 90.0                   #metros
+pesoNacelle = 467.0        #KN
+d = 2500.0                 #kg/m3
+e = 0.3                    #metros
+alfa = 0.2                 #coeficiente de rugosidade do terreno
+Cd = 0.7                   #coeficiente de arrasto
 
 # Variação 1: Torre de Alta Potência (Nova Geração)
 #R_base = 3.50              # metros (Base bem mais larga)
@@ -33,15 +35,18 @@ import math
 #d = 2500.0                 # kg/m3 (Concreto armado mantido)
 #e = 0.35                   # metros (Paredes de 35 cm para aguentar o peso)
 #alfa = 0.2                 # coeficiente de rugosidade do terreno
+#Cd = 0.7                   #coeficiente de arrasto
 
 # Variação 2: Torre de Geração Antiga (Onshore Leve)
-R_base = 1.80              # metros (Base mais estreita)
-R_nacelle = 0.80           # metros
-H = 80.0                   # metros (Torre mais baixa)
-pesoNacelle = 1800.0       # KN (Nacelle mais leve)
-d = 2500.0                 # kg/m3 (Concreto armado mantido)
-e = 0.15                   # metros (Paredes de 15 cm)
-alfa = 0.2                 # coeficiente de rugosidade do terreno
+#R_base = 1.80              # metros (Base mais estreita)
+#R_nacelle = 0.80           # metros
+#H = 80.0                   # metros (Torre mais baixa)
+#pesoNacelle = 1800.0       # KN (Nacelle mais leve)
+#d = 2500.0                 # kg/m3 (Concreto armado mantido)
+#e = 0.15                   # metros (Paredes de 15 cm)
+#alfa = 0.2                 # coeficiente de rugosidade do terreno
+#Cd = 0.7                   #coeficiente de arrasto
+
 
 nome_pasta = f"Torre_H{H}m_Rb{R_base*100}cm_Rn{R_nacelle}m_e{e*100}cm"
 os.makedirs(nome_pasta, exist_ok=True)
@@ -85,7 +90,8 @@ cenarios = {
 #contas:
 def calcular_raio(z):
     """calcula o raio para determinada altura"""
-    return  R_base - ((R_base-R_nacelle) / H) * z 
+
+    return  np.where(z < (H/2) , R_base - ((R_base-R_nacelle) / (H/2)) * z , R_nacelle ) 
 
 def calcular_area(z):
     """calcula a área da seção transversal vazada para alturas z"""
@@ -101,7 +107,7 @@ def peso_distribuido(z, dz):
 def vento_distribuido(z, dz, pressaoVento):
     """calcula a força do vento sobre uma fatia da torre na altura z"""
     Diametro = 2*calcular_raio(z)
-    return (Diametro * dz * pressaoVento * ( ( z / H ) ** (2*alfa) ))
+    return (Cd * Diametro * dz * pressaoVento * ( ( z / H ) ** (2*alfa) ))
 
 #esforços
 def calcular_Esforcos(z,dz, pressaoVento, forcaNacelle, momentoNacelle):
@@ -120,7 +126,7 @@ def calcular_Esforcos(z,dz, pressaoVento, forcaNacelle, momentoNacelle):
     forcaCortante_inv = forcaNacelle + np.cumsum(vento_inv) - vento_inv 
 
     #calculo do momento fletor:
-    momentoFletor_inv = momentoNacelle + np.cumsum(forcaCortante_inv * dz) - (forcaCortante_inv * dz)
+    momentoFletor_inv = momentoNacelle + np.cumsum(forcaCortante_inv * dz) - (forcaNacelle * dz) 
 
     normal = normal_inv[::-1]
     forcaCortante = forcaCortante_inv[::-1]
