@@ -1,7 +1,7 @@
 {
     "cenarios": {
         "Caso_Referência_Calculado_A_Mao": {
-            "pressao": 1.93,
+            "pressao": 2.16,
             "forca": 363.0,
             "momento": 0.0
         },

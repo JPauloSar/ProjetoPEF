@@ -1,0 +1,12 @@
+{
+    "parametros_torre": {
+        "R_base": 2.50,
+        "R_nacelle": 1.50,
+        "H": 80.0,
+        "pesoNacelle": 392.4,
+        "d": 2500.0,
+        "e": 0.20,
+        "alfa": 0.16,
+        "Cd": 0.55
+    }
+}

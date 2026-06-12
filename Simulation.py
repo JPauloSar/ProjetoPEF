@@ -3,6 +3,8 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import sys
+import shutil
 
 #Hipóteses Siplificadoras para os fins da simulação:
 #   1) A torre consiste em um engaste fixo no solo com altura H;
@@ -15,8 +17,15 @@ import math
 #      perfil de Hellmann (IEC 61400-1) para pressão do vento na torre naquele ponto. Ou seja: P_z= P_H*(z/H)**(2*alfa).
 #      também há uma força concentrada do vento na nacelle.
 
+#seleção do .json
+if len(sys.argv) > 1:
+    ficheiro_torre = sys.argv[1]
+else:
+    print("sem seleção detetada, encerrando Wrapper.py...")
+    sys.exit() 
+
 #Leitura do .json da torre 
-with open( "parametros_torre.json" , "r" ) as torre :
+with open( ficheiro_torre , "r" ) as torre :
     dados_torre = json.load(torre)
 
 params = dados_torre["parametros_torre"]
@@ -37,8 +46,13 @@ with open( "cenarios_vento.json" , "r" ) as arquivo_cenarios :
 cenarios = dados_cenarios["cenarios"]
 
 #criação da pasta 
-nome_pasta = f"Torre_H{H}m_Rb{R_base*100}cm_Rn{R_nacelle}m_e{e*100}cm"
+pasta_principal = "Simulações_Feitas"
+nome_base = os.path.splitext(os.path.basename(ficheiro_torre))[0]
+nome_pasta = os.path.join(pasta_principal, nome_base)
+
 os.makedirs(nome_pasta, exist_ok=True)
+caminho_copia_json = os.path.join(nome_pasta, os.path.basename(ficheiro_torre))
+shutil.copy(ficheiro_torre, caminho_copia_json)
 
 #Dados hardcode
 g = 9.81            #m/s2
@@ -185,10 +199,6 @@ axs_global[2].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 fig_global.tight_layout(rect=[0, 0.15, 1, 1])
 
 # --- FIM DA NOVA LEGENDA ---
-
-caminho_global = os.path.join(nome_pasta, "00_Comparativo_Geral_de_Cenarios.png")
-fig_global.savefig(caminho_global, dpi=300)
-plt.close(fig_global)
 
 caminho_global = os.path.join(nome_pasta, "00_Comparativo_Geral_de_Cenarios.png")
 fig_global.savefig(caminho_global, dpi=300)
